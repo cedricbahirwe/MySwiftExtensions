@@ -405,3 +405,60 @@ class TextViewController: UIViewController {
         self.textView.scrollRangeToVisible(self.textView.selectedRange)
     }
 }
+
+// Currency TextField
+class CurrencyViewController: UIViewController, UITextFieldDelegate {
+    @IBOutlet weak var currencyField: UITextField!
+    var amount = 0
+    lazy var numberFormatter: NumberFormatter = {
+        let formatter  = NumberFormatter()
+        formatter.numberStyle = .currency
+        
+        formatter.currencySymbol = "RWF"
+        
+        return formatter
+    }()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        self.currencyField.delegate = self
+        self.currencyField.placeholder  = self.updateCurrencyField()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+    
+    
+    func updateCurrencyField() -> String? {
+        let number = Double(amount/100) + Double(amount%100)/100
+        
+        return self.numberFormatter.string(from: NSNumber(value: number))
+    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if let digit = Int(string) {
+            amount = amount * 10 + digit
+            
+            currencyField.text = updateCurrencyField()
+        }
+        
+        if amount > 1_000_000_000_00 {
+            let alert = UIAlertController(title: "Please enter a value less than 1 Billion", message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: { (action) in
+                self.amount = 0
+                self.currencyField.text = ""
+            }))
+            
+            present(alert, animated: true, completion: nil)
+        } else {
+            currencyField.text = updateCurrencyField()
+        }
+        
+        if string == "" {
+            amount /= 10
+            currencyField.text = amount == 0 ? "" : updateCurrencyField()
+        }
+        return false
+    }
+}
