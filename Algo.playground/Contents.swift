@@ -378,3 +378,30 @@ extension String {
         return attributedString.string
     }
 }
+
+
+// Handle User TextView
+class TextViewController: UIViewController {
+    
+    var textView: UITextView!
+    /// Note: you should start  by adding these two Notificationsin viewDiidLoad()
+    override func viewDidLoad() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateTextView(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateTextView(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    // Update the textView (bottom ContenInset,  scrollIndicatorInsets and scrollRangeToVisible) according to the KeyBoard Frame
+    @objc func updateTextView(notification: Notification) {
+        let userInfo = notification.userInfo!
+        let keyboardFrameCoordinates = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let keyBoardFrame = self.view.convert(keyboardFrameCoordinates, to: self.view.window)
+        
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            self.textView.contentInset = .zero
+        } else {
+            self.textView.contentInset.bottom = keyBoardFrame.height
+            self.textView.scrollIndicatorInsets = textView.contentInset
+        }
+        self.textView.scrollRangeToVisible(self.textView.selectedRange)
+    }
+}
