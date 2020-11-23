@@ -327,12 +327,8 @@ extension String {
     }
 }
 
-
-
 // This method returned A string with the first letter capitalized
 extension String {
-    
-    
     func firstLetterCapitalized() -> String {
         return prefix(1).capitalized + dropFirst()
     }
