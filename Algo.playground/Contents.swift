@@ -488,3 +488,28 @@ class CurrencyViewController: UIViewController, UITextFieldDelegate {
         return false
     }
 }
+
+// Substraction operation between Strings
+
+func -(lhs: String, rhs: String) -> String {
+    let checks = lhs.contains(rhs) && lhs.count >= rhs.count
+    
+    let leftArray = Array(lhs)
+    let rightArray = Array(rhs)
+    
+    var main = leftArray
+    var result = ""
+    
+    if checks {
+        for index in 0..<rightArray.count {
+            if rightArray[index] == leftArray[index] {
+                let ind = main.firstIndex(where: { $0 == rightArray[index] })
+                main.remove(at: ind ?? 0)
+            }
+        }
+        result = String(main)
+        return result
+    } else {
+        return result
+    }
+}
