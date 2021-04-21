@@ -30,8 +30,8 @@ extension String {
 let name = "Cédric Bahirwe"
 
 let convertedName = name.rot13()
-print(convertedName)
+//print(convertedName)
 // To same extension is used convert back the transformed text.
 let restoreName = convertedName.rot13()
 
-print(name)
+//print(name)
